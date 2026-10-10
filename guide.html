@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide & Architecture — LINKLOCKER AI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#0b1329',
+                            900: '#0f172a',
+                            950: '#060a12',
+                        },
+                        cyan: {
+                            450: '#00e5ff',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .ai-text-glow {
+            text-shadow: 0 0 20px rgba(0, 229, 255, 0.8), 0 0 35px rgba(0, 229, 255, 0.4);
+            color: #00e5ff;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950 relative overflow-x-hidden">
+
+    <!-- Smooth Ambient Glow Spheres -->
+    <div class="absolute -top-20 left-1/4 w-[600px] h-[400px] bg-gradient-to-r from-cyan-500/20 via-blue-600/15 to-transparent blur-[160px] pointer-events-none -z-10"></div>
+    <div class="absolute top-1/2 -right-20 w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-[170px] pointer-events-none -z-10"></div>
+    <div class="absolute bottom-10 left-10 w-[500px] h-[400px] bg-rose-500/15 rounded-full blur-[180px] pointer-events-none -z-10"></div>
+
+    <!-- Clean Header Bar with Direct Link to Brand Header Action -->
+    <header class="w-full border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-2xl sticky top-0 z-50">
+        <div class="w-full px-6 sm:px-12 h-20 flex items-center justify-between">
+            <a href="index.html?skipIntro=true" onclick="sessionStorage.setItem('skipIntroVideo', 'true')" class="inline-flex items-center space-x-3 group cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 border border-cyan-400/50 flex items-center justify-center group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(0,229,255,0.3)]">
+                    <i data-lucide="arrow-left" class="w-5 h-5 text-cyan-400"></i>
+                </div>
+                <div class="font-mono">
+                    <span class="text-xs uppercase tracking-wider text-slate-400 group-hover:text-white transition-colors block">Return to</span>
+                    <span class="text-sm font-bold text-cyan-400 uppercase">Live Scanner</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <!-- Full-Width Main Canvas -->
+    <main class="w-full flex-grow px-6 sm:px-12 lg:px-16 py-12 space-y-16">
+
+        <!-- Hero Section -->
+        <div class="text-center space-y-4 max-w-4xl mx-auto">
+            <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-transparent border border-cyan-500/30 text-cyan-400 font-mono text-xs uppercase tracking-widest">
+                <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i>
+                <span>Enterprise QR & Link Threat Defense Playbook</span>
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight">
+                How <span class="bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent">LINKLOCKER</span> <span class="ai-text-glow font-mono italic">AI</span> Operates
+            </h1>
+            <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+                Everything you need to know about isolating malicious QR codes, uncovering disguised URLs, and crowdsourcing blacklist intelligence.
+            </p>
+        </div>
+
+        <!-- 3 Ingestion Workflows -->
+        <section class="space-y-6">
+            <div class="flex items-center space-x-3 text-cyan-400 font-mono text-xs uppercase tracking-widest">
+                <span class="text-sm font-bold text-white tracking-wider">01. Scanner Ingestion Workflows</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Mode 1 -->
+                <div class="p-8 rounded-3xl bg-slate-900/80 backdrop-blur-xl border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300 space-y-4 shadow-[0_0_30px_rgba(0,229,255,0.08)] group">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-mono font-bold px-3 py-1 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">MODE 1</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">QR Image Upload</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Drag and drop screenshots, photos, or downloaded QR codes directly onto the upload canvas. The engine decodes the binary matrix in isolated client memory without pinging external servers.
+                    </p>
+                    <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-cyan-400 flex items-center space-x-1.5">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                        <span>Zero server transfer • 100% in-browser</span>
+                    </div>
+                </div>
+
+                <!-- Mode 2 -->
+                <div class="p-8 rounded-3xl bg-slate-900/80 backdrop-blur-xl border border-blue-500/30 hover:border-blue-400 transition-all duration-300 space-y-4 shadow-[0_0_30px_rgba(59,130,246,0.08)] group">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/15 border border-blue-500/30 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="camera" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-mono font-bold px-3 py-1 rounded-lg bg-blue-500/10 text-blue-300 border border-blue-500/20">MODE 2</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Live Camera Scanner</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Use your smartphone camera or laptop webcam to frame physical stickers at merchant desks or parking stands. Automatically isolates the matrix and safely turns off video once decoded.
+                    </p>
+                    <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-blue-400 flex items-center space-x-1.5">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                        <span>Real-time crosshair bounding box</span>
+                    </div>
+                </div>
+
+                <!-- Mode 3 -->
+                <div class="p-8 rounded-3xl bg-slate-900/80 backdrop-blur-xl border border-teal-500/30 hover:border-teal-400 transition-all duration-300 space-y-4 shadow-[0_0_30px_rgba(20,184,166,0.08)] group">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-2xl bg-teal-500/15 border border-teal-500/30 text-teal-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="link-2" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-mono font-bold px-3 py-1 rounded-lg bg-teal-500/10 text-teal-300 border border-teal-500/20">MODE 3</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Direct URL Analysis</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Paste shortened URLs or suspicious links received via SMS, WhatsApp, or email. The analyzer unmasks redirection hops, typosquatting domains, and fraudulent parameters.
+                    </p>
+                    <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-teal-400 flex items-center space-x-1.5">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                        <span>Multi-hop redirect expansion</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Threat Categories -->
+        <section class="space-y-6">
+            <div class="flex items-center space-x-3 text-rose-400 font-mono text-xs uppercase tracking-widest">
+                <span class="text-sm font-bold text-white tracking-wider">02. Recognized Threat Vectors</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Threat 1 -->
+                <div class="p-6 rounded-3xl bg-slate-900/90 border border-rose-500/40 shadow-[0_0_30px_rgba(244,63,94,0.12)] space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30 uppercase">98% Risk</span>
+                        <i data-lucide="smartphone" class="w-5 h-5 text-rose-400"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-white">Fraudulent UPI QR</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Malicious QR stickers pasted over store standees that automatically trigger debit transfers or spoofed merchant handles.
+                    </p>
+                </div>
+
+                <!-- Threat 2 -->
+                <div class="p-6 rounded-3xl bg-slate-900/90 border border-rose-500/40 shadow-[0_0_30px_rgba(244,63,94,0.12)] space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30 uppercase">98% Risk</span>
+                        <i data-lucide="landmark" class="w-5 h-5 text-rose-400"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-white">Fake Banking Clones</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Cloned portals mimicking authentic banks to harvest net-banking user IDs, passwords, and one-time passwords (OTPs).
+                    </p>
+                </div>
+
+                <!-- Threat 3 -->
+                <div class="p-6 rounded-3xl bg-slate-900/90 border border-cyan-500/30 shadow-[0_0_30px_rgba(0,229,255,0.08)] space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 uppercase">High Risk</span>
+                        <i data-lucide="zap-off" class="w-5 h-5 text-cyan-400"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-white">Electricity Bill Traps</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Fraudulent alerts claiming electricity will be disconnected tonight unless paid via an unverified link or APK.
+                    </p>
+                </div>
+
+                <!-- Threat 4 -->
+                <div class="p-6 rounded-3xl bg-slate-900/90 border border-cyan-500/30 shadow-[0_0_30px_rgba(0,229,255,0.08)] space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 uppercase">Moderate</span>
+                        <i data-lucide="wifi" class="w-5 h-5 text-cyan-400"></i>
+                    </div>
+                    <h4 class="text-base font-bold text-white">Rogue Wi-Fi Matrix</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        QR matrices configured to silently attach mobile devices to unencrypted evil-twin hotspots designed to spy on traffic.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Crowdsource Blacklist Architecture -->
+        <section class="p-8 sm:p-12 rounded-3xl bg-slate-900/80 backdrop-blur-2xl border border-cyan-500/30 shadow-[0_0_40px_rgba(0,229,255,0.1)] space-y-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                <div>
+                    <span class="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold block mb-1">03. Real-Time Community Defense</span>
+                    <h3 class="text-2xl font-bold text-white">How the Crowdsourced Blacklist Shields Everyone</h3>
+                </div>
+                <div class="px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Synchronized Peer Registry</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+                    <div class="text-cyan-400 font-mono font-bold text-sm">Step 1 • Report Submission</div>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        When any user spots a scam, they click <strong>"Submit Scam Link / QR Matrix"</strong>, select the threat category, and log the URL or QR into the blacklist repository.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+                    <div class="text-cyan-400 font-mono font-bold text-sm">Step 2 • Active Interception</div>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        If another person scans or inputs that exact URL or QR on LinkLocker AI, the client-side heuristic engine immediately intercepts execution and marks it with a <strong>98% Risk Factor</strong>.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+                    <div class="text-cyan-400 font-mono font-bold text-sm">Step 3 • Threat Diagnostics</div>
+                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        The interface renders the decoded data safely, highlights the submitted category, and provides a clear breakdown explaining why the asset is dangerous.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Full-Width Action Banner -->
+        <section class="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-cyan-950/30 via-slate-900/90 to-blue-950/30 border border-cyan-500/40 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+            <div class="space-y-2 text-center md:text-left">
+                <h3 class="text-xl sm:text-2xl font-black text-white">Ready to Inspect a Suspicious Asset?</h3>
+                <p class="text-xs sm:text-sm text-slate-400">Launch the client-side scanner and audit any link or QR code safely.</p>
+            </div>
+            <a href="index.html#scanner" class="px-9 py-4 rounded-xl bg-gradient-to-r from-cyan-400 via-teal-400 to-blue-600 hover:from-cyan-300 hover:to-blue-500 text-slate-950 font-black text-sm uppercase tracking-wider transition-all shadow-[0_0_35px_rgba(0,229,255,0.4)] hover:scale-105 active:scale-95 shrink-0 flex items-center space-x-2">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+                <span>Open Threat Scanner</span>
+            </a>
+        </section>
+
+    </main>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

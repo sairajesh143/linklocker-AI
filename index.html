@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <!-- html2canvas for capturing and downloading report image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LINKLOCKER AI — Enterprise QR & Link Scam Detector</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#0b1329',
+                            900: '#0f172a',
+                            950: '#090d16',
+                        },
+                        cyan: {
+                            450: '#00e5ff',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- jsQR Library for Live Webcam QR Decoding -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <!-- Custom Stylesheet link -->
+    <link rel="stylesheet" href="style.css">
+</head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-950">
+
+    <!-- Intro Video Overlay Splash Screen -->
+    <div id="intro-video-overlay" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center transition-opacity duration-700">
+        <video id="intro-video" class="w-full h-full object-cover" autoplay muted playsinline>
+            <source src="video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Clean Modern Header -->
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Left: Brand Logo & Title -->
+            <div class="flex items-center space-x-3.5 cursor-pointer group shrink-0" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-slate-900 border-2 border-cyan-400 flex items-center justify-center shrink-0 logo-tech-glow transition-transform group-hover:scale-105">
+                    <img src="logo.jpeg" alt="LINKLOCKER AI Logo" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-lg sm:text-xl font-extrabold tracking-wider bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent">LINKLOCKER</span>
+                        <span class="ai-text-glow text-base sm:text-lg font-black tracking-widest uppercase italic">AI</span>
+                    </div>
+                    <span class="block text-[10px] uppercase tracking-widest text-cyan-400/80 font-semibold mt-0.5">QR and Link Scam Detecter</span>
+                </div>
+            </div>
+
+            
+        <nav class="hidden md:flex items-center space-x-8">
+    <a href="#scanner" class="nav-line-link text-xs font-semibold tracking-wider uppercase text-slate-300">Threat Scanner</a>
+    <a href="#stats" class="nav-line-link text-xs font-semibold tracking-wider uppercase text-slate-300">Live Telemetry</a>
+    <a href="#education" class="nav-line-link text-xs font-semibold tracking-wider uppercase text-slate-300">How Phishing Works</a>
+    <a href="#enterprise" class="nav-line-link text-xs font-semibold tracking-wider uppercase text-slate-300">API & Enterprise</a>
+    <a href="guide.html" class="nav-line-link text-xs font-semibold tracking-wider uppercase text-slate-300">User Guide</a>
+
+    <!-- Circular Hologram Radar Notification Button (Lag-Free) -->
+<div class="relative flex items-center justify-center isolate">
+    <!-- Smooth Radar Pulse Ring -->
+    <span class="absolute w-11 h-11 rounded-full border border-cyan-400/40 animate-radar-wave pointer-events-none -z-10"></span>
+
+    <!-- Button Base -->
+    <!-- Button Base (Notice: overflow-hidden is completely removed) -->
+<button type="button" id="notif-bell-btn" onclick="toggleNotificationDropdown(event)" class="group relative w-11 h-11 rounded-full bg-slate-950/95 border border-cyan-400/50 hover:border-cyan-300 flex items-center justify-center transition-transform duration-200 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(0,229,255,0.25)] hover:shadow-[0_0_30px_rgba(0,229,255,0.45)]">
+    <!-- Bell Icon -->
+    <i data-lucide="bell" class="relative z-10 w-4 h-4 text-cyan-300 group-hover:text-white transition-colors animate-bell-ring"></i>
+
+    <!-- High-Visibility Cyber Badge (Pinned to top-right corner) -->
+    <span id="notif-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-600 text-white font-mono text-[11px] font-black leading-none flex items-center justify-center border-2 border-slate-950 shadow-[0_0_10px_#f43f5e] z-30 pointer-events-none">
+        0
+    </span>
+</button>
+
+    <!-- Dropdown Container -->
+    <div id="notif-dropdown" class="hidden absolute right-0 top-full mt-3 w-80 sm:w-96 rounded-2xl bg-slate-950/95 border border-slate-800 shadow-[0_0_40px_rgba(0,0,0,0.8)] backdrop-blur-2xl z-[120] overflow-hidden text-left">
+        <div class="px-4 py-3 border-b border-slate-800/80 flex items-center justify-between bg-slate-900/60">
+            <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                <span class="text-xs font-mono font-bold uppercase tracking-wider text-slate-200">Live Threat Broadcasts</span>
+            </div>
+            <button type="button" onclick="clearAllNotifications()" class="text-[10px] font-mono text-cyan-400 hover:text-cyan-300 uppercase tracking-wider transition-colors">Clear All</button>
+        </div>
+        <div id="notif-list-container" class="max-h-72 overflow-y-auto no-scrollbar p-2.5 space-y-2"></div>
+    </div>
+</div>
+</nav>
+        
+
+
+    
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="relative cyber-hero-bg min-h-[calc(100vh-5rem)] flex flex-col items-center justify-center py-20 overflow-hidden text-center">
+            <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-cyan-500/15 blur-[160px] rounded-full pointer-events-none orb-float-1"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-600/15 blur-[160px] rounded-full pointer-events-none orb-float-2"></div>
+            
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-slate-900/90 border border-cyan-500/40 text-cyan-400 text-xs font-semibold mb-8 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i>
+                    <span>Next-Gen AI Defense Against QR Code Phishing & Malicious Links</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-7xl font-black tracking-tight text-white mb-6 leading-[1.15] drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+                    Neutralize QR & Link Scams <br class="hidden sm:block">
+                    <span class="bg-gradient-to-r from-cyan-300 via-teal-300 to-blue-500 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(0,229,255,0.7)]">With LINKLOCKER AI</span>
+                </h1>
+
+                <div class="mt-16 sm:mt-20">
+                    <div class="relative inline-block group">
+    <!-- Ambient Pulsing Neon Glow -->
+    <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-cyan-500 via-teal-400 to-blue-600 opacity-60 blur-xl group-hover:opacity-100 group-hover:blur-2xl transition-all duration-500 animate-pulse"></div>
+
+    <!-- Capsule Container with Rotating Border Beam -->
+    <div class="relative p-[1.5px] rounded-full overflow-hidden">
+        <!-- Infinite Spinning Conic Neon Beam -->
+        <div class="absolute inset-[-100%] bg-[conic-gradient(from_0deg,#00f5ff,#0066ff,#38bdf8,#00f5ff)] animate-cyber-spin"></div>
+
+        <!-- Button Body with Full Half-Circle Curved Ends -->
+        <button onclick="scrollToScanner()" class="relative px-10 py-4 rounded-full bg-slate-950/95 hover:bg-slate-900/95 text-white font-mono text-sm uppercase tracking-widest flex items-center space-x-3 transition-all duration-300 backdrop-blur-2xl overflow-hidden active:scale-95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+            
+            <!-- Holographic Laser Light Sweep -->
+            <div class="absolute top-0 bottom-0 left-0 w-24 bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent animate-holo-sweep pointer-events-none"></div>
+
+            <!-- Single Clean Shield Icon -->
+            <i data-lucide="shield" class="w-4 h-4 text-cyan-400 group-hover:text-cyan-300 transition-colors"></i>
+
+            <!-- Text -->
+            <span class="relative z-10 font-bold bg-gradient-to-r from-white via-cyan-100 to-cyan-300 bg-clip-text text-transparent group-hover:text-white transition-colors drop-shadow-[0_0_10px_rgba(0,245,255,0.4)]">
+                Launch Threat Scanner
+            </span>
+
+            <!-- Direction Indicator -->
+            <i data-lucide="arrow-right" class="w-4 h-4 text-cyan-400 group-hover:translate-x-1 group-hover:text-cyan-300 transition-all"></i>
+        </button>
+    </div>
+</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Threat Scanner Section -->
+        <section id="scanner" class="relative py-28 overflow-hidden bg-slate-950/80 border-t border-slate-800/80">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-bold uppercase tracking-widest text-cyan-400">Interactive Gateway</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Enterprise Threat Scanner</h2>
+                    <p class="text-sm text-slate-400 mt-1">Scan live via webcam, upload a QR code image, or inspect a short link instantly.</p>
+                </div>
+
+                <div class="bg-slate-850/90 border border-slate-700/80 rounded-3xl p-6 sm:p-10 glow-cyan backdrop-blur-xl text-left shadow-2xl transition-all">
+                    <!-- Tab Headers -->
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 p-1.5 bg-slate-900 rounded-2xl mb-8 border border-slate-800">
+                        <button id="tab-qr" onclick="switchTab('qr')" class="flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition-all flex items-center justify-center space-x-2 bg-cyan-500 text-slate-950 shadow-md">
+                            <i data-lucide="qr-code" class="w-4 h-4"></i>
+                            <span>Upload QR Image</span>
+                        </button>
+                        <button id="tab-cam" onclick="switchTab('cam')" class="flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition-all flex items-center justify-center space-x-2 text-slate-400 hover:text-white">
+                            <i data-lucide="camera" class="w-4 h-4"></i>
+                            <span>Scan Live Camera</span>
+                        </button>
+                        <button id="tab-url" onclick="switchTab('url')" class="flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition-all flex items-center justify-center space-x-2 text-slate-400 hover:text-white">
+                            <i data-lucide="link" class="w-4 h-4"></i>
+                            <span>Check URL / Short Link</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab Content 1: QR Code Image Upload -->
+                    <div id="content-qr" class="space-y-6">
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-600 hover:border-cyan-400 rounded-2xl p-8 text-center transition-all bg-slate-900/50 hover:bg-slate-900 relative group">
+                            <input type="file" id="qr-file-input" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" accept="image/*" onchange="handleFileSelect(event)">
+                            <div id="drop-zone-content" class="space-y-4 relative z-0">
+                                <div class="w-16 h-16 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl flex items-center justify-center mx-auto text-cyan-400 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="upload-cloud" class="w-8 h-8"></i>
+                                </div>
+                                <div>
+                                    <p class="text-base font-semibold text-slate-200">Drag & drop your QR code image here</p>
+                                    <p class="text-xs text-slate-400 mt-1">Supports PNG, JPG, WEBP, SVG up to 10MB</p>
+                                </div>
+                                <span class="inline-block px-4 py-2 rounded-xl bg-slate-800 text-cyan-400 text-xs font-medium border border-slate-700">Browse Files</span>
+                            </div>
+                            
+                            <!-- Image Preview Container with Remove Button -->
+                            <div id="file-preview-container" class="hidden flex flex-col items-center space-y-3 relative z-20">
+                                <img id="file-preview-img" class="w-24 h-24 object-contain rounded-xl border border-cyan-500/40 p-1 bg-slate-950 shadow-[0_0_15px_rgba(0,229,255,0.2)]" src="" alt="Preview">
+                                <p id="file-name-display" class="text-sm font-medium text-cyan-300 font-mono"></p>
+                                <button type="button" onclick="clearFile(event)" class="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold transition-all flex items-center space-x-1.5 shadow-[0_0_15px_rgba(244,63,94,0.15)] hover:scale-105 active:scale-95">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    <span>Remove Image</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Or test sample QR payloads:</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="setQuickInput('https://login.secure-bank-portal-auth.com/verify')" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-rose-500/50 text-xs text-slate-300 hover:text-rose-400 transition-colors flex items-center space-x-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                                    <span>Fake Bank Login QR (98% Risk)</span>
+                                </button>
+                                <button onclick="setQuickInput('https://www.google.com')" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-emerald-500/50 text-xs text-slate-300 hover:text-emerald-400 transition-colors flex items-center space-x-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                    <span>Official Google QR (0% Risk)</span>
+                                </button>
+                                <button onclick="setQuickInput('https://bit.ly/claim-free-prize-now-2026')" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-xs text-slate-300 hover:text-amber-400 transition-colors flex items-center space-x-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                    <span>Suspicious Shortener (65% Risk)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content 2: Live Camera QR Scanner -->
+                    <div id="content-cam" class="space-y-6 hidden">
+                        <div class="relative rounded-2xl overflow-hidden bg-slate-950 border-2 border-dashed border-slate-600 flex flex-col items-center justify-center p-5">
+                            <div class="relative w-full max-w-md h-[280px] bg-slate-900 rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
+                                <video id="webcam-video" class="w-full h-full object-cover" autoplay playsinline muted></video>
+                                <canvas id="webcam-canvas" class="hidden"></canvas>
+                                
+                                <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                                    <div class="w-48 h-48 border border-cyan-400/40 rounded-xl relative flex items-center justify-center">
+                                        <div class="absolute inset-x-0 scanning-laser h-0.5 bg-cyan-400 shadow-[0_0_12px_#00ffff]"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 text-center space-y-3 w-full max-w-md">
+                                <div class="text-xs font-semibold text-emerald-400 flex items-center justify-center space-x-2 bg-slate-900 py-2.5 px-3 rounded-lg border border-slate-800">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span>Camera active — looking for QR code...</span>
+                                </div>
+                                <button type="button" onclick="startWebcam()" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold text-xs transition-all border border-slate-800 flex items-center justify-center space-x-2">
+                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-cyan-400"></i>
+                                    <span>Restart Camera Feed</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content 3: Check URL / Short Link -->
+                    <div id="content-url" class="space-y-6 hidden">
+                        <div class="space-y-2">
+                            <label for="url-input" class="text-sm font-medium text-slate-300 flex items-center justify-between">
+                                <span>Target URL or Shortened Link</span>
+                                <span class="text-xs text-slate-400">SSL & Redirect Chain Inspection Enabled</span>
+                            </label>
+                            <div class="relative flex items-center">
+    <!-- Left Globe Icon -->
+    <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+        <i data-lucide="globe" class="w-5 h-5"></i>
+    </span>
+
+    <!-- Input Box (added pr-28 so text never overlaps the paste button) -->
+    <input type="text" id="url-input" placeholder="e.g., https://google.com or https://login.secure-bank.com" class="w-full pl-12 pr-28 py-4 rounded-2xl bg-slate-900 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm font-medium transition-all">
+
+    <!-- Right-Aligned Cyber Paste Button -->
+    <button type="button" id="paste-url-btn" onclick="pasteFromClipboard()" class="absolute right-2 px-3.5 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-xs font-mono font-semibold tracking-wider uppercase transition-all duration-200 flex items-center space-x-1.5 active:scale-95 shadow-[0_0_10px_rgba(0,229,255,0.15)] hover:border-cyan-400">
+        <i data-lucide="clipboard" class="w-3.5 h-3.5"></i>
+        <span>Paste</span>
+    </button>
+</div>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Or select a pre-configured threat scenario:</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="setQuickInput('https://github.com')" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-emerald-500/50 text-xs text-slate-300 hover:text-emerald-400 transition-colors flex items-center space-x-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                    <span>Official GitHub (0% Risk)</span>
+                                </button>
+                                <button onclick="setQuickInput('https://www.apple.com')" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-emerald-500/50 text-xs text-slate-300 hover:text-emerald-400 transition-colors flex items-center space-x-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                    <span>Official Apple (0% Risk)</span>
+                                </button>
+                                <button onclick="setQuickInput('https://login.microsoftonline.com.secure-auth-update.ru/signin')" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-rose-500/50 text-xs text-slate-300 hover:text-rose-400 transition-colors flex items-center space-x-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                                    <span>Fake Microsoft Phish (94% Risk)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analyze Threat Button -->
+                    <div class="mt-8 pt-6 border-t border-slate-800">
+                        <button id="analyze-btn" onclick="startAnalysis()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-teal-400 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-base transition-all shadow-xl shadow-cyan-500/25 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center space-x-2">
+                            <i data-lucide="shield-search" class="w-5 h-5"></i>
+                            <span>Analyze Threat Signature & Risk Factor</span>
+                        </button>
+                    </div>
+
+                    <!-- Ultra-Unique Cybernetic Holographic Loading Screen -->
+                    <div id="simulation-container" class="hidden mt-8 p-10 rounded-3xl bg-slate-950 border border-cyan-500/50 shadow-[0_0_80px_rgba(0,229,255,0.25)] backdrop-blur-2xl space-y-8 text-center relative overflow-hidden">
+                        <!-- Matrix Scanline & Ambient Glow Effects -->
+                        <div class="absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0)_50%,rgba(0,0,0,0.4)_50%)] bg-[length:100%_4px] pointer-events-none opacity-30"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+                        <!-- Heavy Sci-Fi Multi-Layer Spinning Core Animation -->
+                        <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
+                            <div class="absolute inset-0 rounded-full border-2 border-dashed border-cyan-500/40 animate-[spin_8s_linear_infinite]"></div>
+                            <div class="absolute inset-2 rounded-full border-2 border-cyan-400 border-t-transparent border-b-transparent animate-[spin_3s_linear_infinite_reverse]"></div>
+                            <div class="absolute inset-4 rounded-full border border-blue-500/60 animate-ping opacity-75"></div>
+                            <div class="w-12 h-12 bg-cyan-500/20 rounded-2xl border border-cyan-400 flex items-center justify-center text-cyan-300 shadow-[0_0_30px_#00ffff]">
+                                <i data-lucide="shield-check" class="w-6 h-6 animate-pulse"></i>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Status Title -->
+                        <div class="space-y-2 relative z-10">
+                            <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/40 text-cyan-300 text-xs font-mono tracking-widest uppercase shadow-[0_0_15px_rgba(0,229,255,0.3)]">
+                                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                                <span>AI Neural Threat Diagnostics</span>
+                            </div>
+                            <h4 id="simulation-status-text" class="text-base sm:text-lg font-extrabold text-white tracking-wide font-sans drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+                                Initializing deep scan sequence...
+                            </h4>
+                        </div>
+
+                        <!-- Heavy Glowing Progress Bar & Percentage -->
+                        <div class="space-y-3 max-w-lg mx-auto relative z-10">
+                            <div class="w-full bg-slate-900 rounded-full h-3.5 p-0.5 border border-cyan-500/40 overflow-hidden shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]">
+                                <div id="simulation-progress-bar" class="bg-gradient-to-r from-cyan-400 via-teal-400 to-blue-600 h-full rounded-full transition-all duration-300 w-0 shadow-[0_0_25px_#00ffff]"></div>
+                            </div>
+                            <div class="flex justify-between items-center text-xs font-mono px-1">
+                                <span class="text-cyan-400 font-bold uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded-lg border border-cyan-500/20" id="current-phase-label">Phase 1 / 4</span>
+                                <span id="simulation-percent" class="text-cyan-300 font-black text-base tracking-widest">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Hidden Compatibility Spans -->
+                        <div class="hidden">
+                            <span id="step-1"></span><span id="step-2"></span><span id="step-3"></span><span id="step-4"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 mt-12 mb-24 hidden">
+            <div id="results-card" class="bg-slate-850 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl transition-all relative overflow-hidden">
+                <div id="results-ambient-glow" class="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-[100px] pointer-events-none opacity-20"></div>
+
+                <!-- Clean, Simple & Modern Verdict Header -->
+                <div class="pb-8 border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="flex items-center space-x-4">
+                        <div id="verdict-icon-container" class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+                            <i data-lucide="shield-check" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-3">
+                                <span id="verdict-badge" class="px-2.5 py-0.5 rounded-md text-[11px] font-bold font-mono tracking-wider uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                                    SAFE ASSET
+                                </span>
+                                <span id="scan-timestamp" class="text-xs text-slate-400 font-mono"></span>
+                            </div>
+                            <h2 id="verdict-title" class="text-2xl font-bold text-white mt-1">No Threat Detected</h2>
+                            <p id="verdict-subtitle" class="text-xs text-slate-400 font-mono mt-0.5"></p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-3 shrink-0">
+                        <button onclick="resetScanner()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-colors flex items-center space-x-2 border border-slate-700">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            <span>Scan Another</span>
+                        </button>
+                        <button onclick="downloadReport()" class="px-4 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-xs font-semibold transition-colors flex items-center space-x-2">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            <span>Download Report</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="py-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+                            <i data-lucide="cpu" class="w-4 h-4 text-cyan-400"></i>
+                            <span>Deep Heuristic Threat Breakdown</span>
+                        </h3>
+                        <div id="risk-factor-badge" class="px-4 py-1.5 rounded-xl font-mono text-sm font-extrabold border"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="breakdown-grid"></div>
+                </div>
+
+                <div id="advice-box" class="p-6 rounded-2xl border flex items-start space-x-4">
+                    <div id="advice-icon-wrap" class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"></div>
+                    <div>
+                        <h4 id="advice-title" class="text-sm font-bold uppercase tracking-wide"></h4>
+                        <p id="advice-text" class="text-sm text-slate-300 mt-1 leading-relaxed"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section: Full-Width Immersive Cyber Telemetry -->
+        <section id="stats" class="w-full border-y border-slate-800 bg-slate-900/60 py-20 px-6 sm:px-10 lg:px-16 mb-24">
+            <div class="w-full max-w-[1800px] mx-auto">
+                
+                <!-- Header -->
+                <div class="text-center max-w-3xl mx-auto mb-14">
+                    <span class="text-xs font-bold uppercase tracking-widest text-cyan-400">Live Global Protection</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1.5">Real-Time Threat Statistics</h2>
+                    <p class="text-sm text-slate-400 mt-2">
+                        Live activity tracking how LinkLocker AI protects users from fake QR codes and scam links worldwide.
+                    </p>
+                </div>
+
+                <!-- 4 Wide Responsive Edge-to-Edge Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 w-full">
+                    
+                    <!-- Card 1 -->
+                    <div class="bg-slate-850/95 border border-slate-800/90 hover:border-cyan-500/50 rounded-2xl p-6 lg:p-7 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-11 h-11 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center">
+                                    <i data-lucide="qr-code" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-xs font-mono font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
+                                    +14.2% Today
+                                </span>
+                            </div>
+                            <h3 id="live-scan-counter" class="text-3xl xl:text-4xl font-black text-white font-mono tracking-tight">0</h3>
+                            <p class="text-sm font-semibold text-slate-200 mt-1">Total Scans Processed</p>
+                            <p class="text-xs text-slate-400 mt-2.5 leading-relaxed">
+                                Total QR matrices and web URLs analyzed across the security network today.
+                            </p>
+                        </div>
+                        <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-70"></div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-slate-850/95 border border-slate-800/90 hover:border-rose-500/50 rounded-2xl p-6 lg:p-7 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-11 h-11 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
+                                    <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-xs font-mono font-semibold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 rounded-lg">
+                                    Blocked
+                                </span>
+                            </div>
+                            <h3 class="text-3xl xl:text-4xl font-black text-white font-mono tracking-tight">1,428,109</h3>
+                            <p class="text-sm font-semibold text-slate-200 mt-1">Scam Traps Intercepted</p>
+                            <p class="text-xs text-slate-400 mt-2.5 leading-relaxed">
+                                Malicious credential harvesters and fake portals defused before user access.
+                            </p>
+                        </div>
+                        <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-rose-500 to-amber-500 opacity-70"></div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-slate-850/95 border border-slate-800/90 hover:border-amber-500/50 rounded-2xl p-6 lg:p-7 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
+                                    <i data-lucide="activity" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-xs font-mono font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-lg">
+                                    Elevated
+                                </span>
+                            </div>
+                            <h3 class="text-3xl xl:text-4xl font-black text-white font-mono tracking-tight">Level 4/5</h3>
+                            <p class="text-sm font-semibold text-slate-200 mt-1">Global Quishing Risk</p>
+                            <p class="text-xs text-slate-400 mt-2.5 leading-relaxed">
+                                Active cyber warning indicating heightened QR phishing campaigns this week.
+                            </p>
+                        </div>
+                        <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-amber-500 to-yellow-500 opacity-70"></div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="bg-slate-850/95 border border-slate-800/90 hover:border-emerald-500/50 rounded-2xl p-6 lg:p-7 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                                    <i data-lucide="zap" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-xs font-mono font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
+                                    Real-time
+                                </span>
+                            </div>
+                            <h3 class="text-3xl xl:text-4xl font-black text-white font-mono tracking-tight">&lt; 140ms</h3>
+                            <p class="text-sm font-semibold text-slate-200 mt-1">AI Engine Scan Latency</p>
+                            <p class="text-xs text-slate-400 mt-2.5 leading-relaxed">
+                                Average verification time required to execute deep heuristic checks.
+                            </p>
+                        </div>
+                        <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 to-cyan-500 opacity-70"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-widest text-cyan-400">Cybersecurity Awareness</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">How Quishing Works & How to Defend</h2>
+                <p class="text-slate-400 mt-2">QR code phishing bypasses traditional email filters by encoding malicious URLs into physical or digital imagery.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-850 border border-slate-800 rounded-3xl p-8 hover:border-cyan-500/40 transition-all group">
+                    <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform"><i data-lucide="eye-off" class="w-7 h-7"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-3">1. The Invisible URL Trap</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Unlike hyperlinks in emails where users can hover to preview destination, QR codes encode web addresses into visual pixel matrices that cannot be previewed visually.</p>
+                </div>
+                <div class="bg-slate-850 border border-slate-800 rounded-3xl p-8 hover:border-cyan-500/40 transition-all group">
+                    <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform"><i data-lucide="split" class="w-7 h-7"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-3">2. Multi-Hop Redirect Chains</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Attackers utilize dynamic shorteners and CDN redirects to evade basic static scanners, shuttling unsuspecting users to lookalike credential harvesting portals.</p>
+                </div>
+                <div class="bg-slate-850 border border-slate-800 rounded-3xl p-8 hover:border-cyan-500/40 transition-all group">
+                    <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform"><i data-lucide="shield-check" class="w-7 h-7"></i></div>
+                    <h3 class="text-xl font-bold text-white mb-3">3. Enterprise Prevention</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Deploy LINKLOCKER AI mobile scanner gateways and API integrations to inspect every scanned matrix against real-time global threat databases prior to execution.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Report Scam & Threat Feed Section -->
+        <section id="enterprise" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+            <div class="bg-gradient-to-r from-slate-850 via-slate-900 to-slate-850 border border-cyan-500/30 rounded-3xl p-8 sm:p-12 relative overflow-hidden text-center glow-cyan">
+                <div class="absolute -top-32 -left-32 w-80 h-80 bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl mx-auto">
+                    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold mb-6">
+                        <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-rose-400"></i>
+                        <span>Crowdsourced Scam Intelligence</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Encountered a New Scam? Report It Instantly</h2>
+                    <p class="text-slate-400 text-sm sm:text-base mb-8">Help protect millions of users. Submit unverified suspicious links, fake payment portals, or lookalike QR codes directly to the LINKLOCKER AI global blacklist.</p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button onclick="openReportScamModal()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-cyan-500/30 hover:scale-105 active:scale-95 flex items-center justify-center space-x-2">
+                            <i data-lucide="flag" class="w-4 h-4"></i>
+                            <span>Submit Suspicious Link</span>
+                        </button>
+                        <button onclick="toggleBlacklistDrawer()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm transition-all border border-slate-700 flex items-center justify-center space-x-2">
+                            <i data-lucide="list-x" class="w-4 h-4 text-rose-400"></i>
+                            <span>View Blacklisted Domains</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-950 border-t border-slate-800/80 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded-full overflow-hidden bg-slate-900 border-2 border-cyan-400 flex items-center justify-center shrink-0 logo-tech-glow">
+                    <img src="logo.jpeg" alt="LINKLOCKER AI Logo" class="w-full h-full object-cover">
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-lg font-extrabold tracking-wider text-white">LINKLOCKER</span>
+                    <span class="ai-text-glow text-base font-black tracking-widest uppercase italic">AI</span>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400 text-center md:text-left">© 2026 LINKLOCKER AI Cybersecurity Inc. All rights reserved. SMV - Crew</p>
+            <div class="flex items-center space-x-3 text-xs text-slate-400 font-mono">
+    <span class="hover:text-cyan-400 transition-colors">M.Sai Rajesh</span>
+    <span class="text-slate-600">|</span>
+    <span class="hover:text-cyan-400 transition-colors">G.Manoj</span>
+    <span class="text-slate-600">|</span>
+    <span class="hover:text-cyan-400 transition-colors">R.Veera Narayana</span>
+</div>
+        </div>
+    </footer>
+
+    <!-- Lightweight Submission Modal with QR Drag & Drop -->
+<div id="report-scam-modal" class="fixed inset-0 z-[150] bg-slate-950/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-slate-900 border border-cyan-500/40 rounded-3xl p-6 sm:p-8 max-w-lg w-full mx-4 shadow-2xl relative">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+            <div class="flex items-center space-x-2 text-cyan-400 text-xs font-mono uppercase tracking-widest">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400"></i>
+                <span>Submit Scam Link / QR Matrix</span>
+            </div>
+            <button onclick="closeReportScamModal()" class="text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+        
+        <div class="space-y-4 my-6">
+            <!-- QR Code Drag & Drop Upload Zone -->
+            <div>
+                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Upload or Drag Scam QR Code</label>
+                <div id="report-qr-dropzone" class="border border-dashed border-slate-700 hover:border-rose-400 rounded-2xl p-4 text-center transition-all bg-slate-950 hover:bg-slate-950/80 relative group cursor-pointer">
+                    <input type="file" id="report-qr-file-input" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" accept="image/*" onchange="handleReportQRFileSelect(event)">
+                    
+                    <div id="report-dropzone-content" class="flex flex-col items-center justify-center space-y-1.5 pointer-events-none">
+                        <div class="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
+                            <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-300">Drop scam QR image here or <span class="text-rose-400 underline">browse</span></p>
+                        <p class="text-[10px] text-slate-500">PNG, JPG, WEBP — Payload extracts automatically</p>
+                    </div>
+
+                    <!-- Mini Preview State -->
+                    <div id="report-preview-container" class="hidden flex items-center justify-between px-2 py-1">
+                        <div class="flex items-center space-x-2.5">
+                            <img id="report-preview-img" class="w-10 h-10 object-contain rounded-lg border border-rose-500/40 p-0.5 bg-slate-900" src="" alt="Scam QR">
+                            <span id="report-preview-name" class="text-xs font-mono text-rose-400 truncate max-w-[180px]"></span>
+                        </div>
+                        <button type="button" onclick="clearReportQR(event)" class="text-slate-400 hover:text-rose-400 p-1 transition-colors relative z-20">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center my-1">
+                <div class="flex-grow border-t border-slate-800"></div>
+                <span class="px-3 text-[10px] font-mono uppercase tracking-widest text-slate-500">OR ENTER MANUALLY</span>
+                <div class="flex-grow border-t border-slate-800"></div>
+            </div>
+
+            <!-- Suspicious URL input -->
+            <div>
+                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Suspicious URL / Extracted Payload</label>
+                <input type="text" id="report-input-url" placeholder="e.g., https://login.fake-bank-auth.com" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-400 font-mono">
+            </div>
+
+            <!-- Threat Category dropdown -->
+            <div>
+                <label class="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-2">Threat Category</label>
+                <select id="report-input-category" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 text-sm focus:outline-none focus:border-cyan-400">
+    <option value="Fake Banking Portal (Phishing)">Fake Banking Portal (Phishing)</option>
+    <option value="Fraudulent UPI / Payment Request QR">Fraudulent UPI / Payment Request QR</option>
+    <option value="Crypto Wallet Drainer / Fake Token Airdrop">Crypto Wallet Drainer / Fake Token Airdrop</option>
+    <option value="Fake Utility Bill / Electricity Disconnection Lure">Fake Utility Bill / Electricity Disconnection Lure</option>
+    <option value="Social Media Account Phishing (Instagram, WhatsApp, FB)">Social Media Account Phishing (Instagram, WhatsApp, FB)</option>
+    <option value="Lookalike Microsoft / Google Workspace SSO Portal">Lookalike Microsoft / Google Workspace SSO Portal</option>
+    <option value="Fake Job Recruitment / HR Fee Fraud">Fake Job Recruitment / HR Fee Fraud</option>
+    <option value="Malicious URL Shortener (Hidden Redirect Chain)">Malicious URL Shortener (Hidden Redirect Chain)</option>
+    <option value="Rogue / Evil Twin Wi-Fi Hotspot QR">Rogue / Evil Twin Wi-Fi Hotspot QR</option>
+    <option value="Malicious APK / Trojan Direct Download Link">Malicious APK / Trojan Direct Download Link</option>
+    <option value="Prize / Cash Back / Lottery Lure (KBC, Spin-Wheel)">Prize / Cash Back / Lottery Lure (KBC, Spin-Wheel)</option>
+    <option value="Typosquatting / Lookalike Brand Domain">Typosquatting / Lookalike Brand Domain</option>
+    <option value="Fake Government / KYC / Aadhaar Update Scam">Fake Government / KYC / Aadhaar Update Scam</option>
+    <option value="Other Suspicious / Unknown Threat">Other Suspicious / Unknown Threat</option>
+</select>
+            </div>
+        </div>
+
+        <button onclick="submitScamReport()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-400 hover:to-red-500 text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-rose-500/20 active:scale-95">
+            Add to Global Blacklist
+        </button>
+    </div>
+</div>
+
+        <!-- Blacklisted Domains Modal -->
+<div id="blacklist-drawer" class="fixed inset-0 z-[150] bg-slate-950/80 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full mx-4 shadow-2xl relative flex flex-col max-h-[90vh]">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800 shrink-0">
+            <div class="flex items-center space-x-2 text-rose-400 text-xs font-mono uppercase tracking-widest">
+                <i data-lucide="alert-octagon" class="w-4 h-4"></i>
+                <span>Recently Neutralized Threats</span>
+            </div>
+            <button onclick="toggleBlacklistDrawer()" class="text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Dynamic Container: Clean compact cards with conditional scroll -->
+        <div class="space-y-2.5 my-5 pr-1 flex-grow overflow-y-auto no-scrollbar" id="blacklist-items-container" style="max-height: 480px;">
+    <!-- Dynamically populated from user submissions only -->
+</div>
+
+        <div class="flex items-center gap-3 shrink-0 pt-3 border-t border-slate-800">
+            <button id="blacklist-view-more-btn" onclick="toggleBlacklistViewMore()" class="hidden flex-1 py-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 font-semibold text-xs tracking-wider uppercase transition-colors border border-cyan-500/30">
+                View More (<span id="blacklist-hidden-count">0</span>)
+            </button>
+            <button onclick="toggleBlacklistDrawer()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs tracking-wider uppercase transition-colors">
+                Close Feed
+            </button>
+        </div>
+    </div>
+</div>
+
+    <!-- Ultra-Clean Immersive Danger Themed Warning Modal -->
+    <div id="custom-warning-modal" class="fixed inset-0 z-[150] bg-slate-950/90 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-slate-900 border border-rose-500/50 rounded-3xl p-8 max-w-md w-full mx-4 shadow-[0_0_50px_rgba(244,63,94,0.25)] text-center transform scale-95 transition-transform duration-300 relative overflow-hidden" id="warning-modal-box">
+            
+            <div class="mx-auto mb-5 text-rose-500 flex justify-center drop-shadow-[0_0_15px_rgba(244,63,94,0.8)] animate-pulse">
+                <i data-lucide="shield-alert" class="w-14 h-14"></i>
+            </div>
+            
+            <div class="inline-block px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 font-mono text-[11px] uppercase tracking-widest mb-3">
+                [SECURITY PROTOCOL TRIGGERED]
+            </div>
+            
+            <h3 class="text-2xl font-black tracking-wider uppercase text-white mb-4 font-sans drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                Invalid Asset Format
+            </h3>
+            
+            <p id="custom-warning-text" class="text-sm text-slate-300 mb-8 leading-relaxed font-sans tracking-normal bg-slate-950/80 p-5 rounded-2xl border border-rose-500/20 text-center">
+            </p>
+            
+            <button type="button" onclick="closeWarningModal()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(244,63,94,0.4)] hover:scale-[1.02] active:scale-[0.98]">
+                Acknowledge & Try Again
+            </button>
+        </div>
+    </div>
+    <!-- Cyber Success Toast Notification -->
+<div id="cyber-toast" class="fixed bottom-8 right-8 z-[200] max-w-md w-full bg-slate-950/95 border border-emerald-500/50 rounded-2xl p-4 shadow-[0_0_40px_rgba(16,185,129,0.3)] backdrop-blur-xl flex items-center space-x-3.5 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-500 ease-out">
+    <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+        <i data-lucide="shield-check" class="w-5 h-5"></i>
+    </div>
+    <div class="flex-grow">
+        <div class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">Global Registry Updated</span>
+        </div>
+        <p id="cyber-toast-text" class="text-xs text-slate-300 mt-0.5 leading-snug">Threat flagged and pushed to LinkLocker AI global blacklist.</p>
+    </div>
+    <button type="button" onclick="hideCyberToast()" class="text-slate-400 hover:text-white p-1 transition-colors">
+        <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+</div>
+<!-- National Cyber Crime Emergency Assistance Modal -->
+<div id="cyber-emergency-modal" class="fixed inset-0 z-[160] bg-slate-950/85 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-slate-900 border border-rose-500/50 rounded-3xl p-6 sm:p-8 max-w-lg w-full mx-4 shadow-[0_0_50px_rgba(244,63,94,0.3)] relative flex flex-col max-h-[92vh] overflow-hidden">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800 shrink-0">
+            <div class="flex items-center space-x-2.5 text-rose-400 text-xs font-mono uppercase tracking-widest">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-rose-500"></i>
+                <span>National Cyber Emergency Response</span>
+            </div>
+            <button onclick="closeCyberEmergencyModal()" class="text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Body Content -->
+        <div class="my-5 space-y-4 overflow-y-auto no-scrollbar pr-1">
+            <div class="p-4 rounded-2xl bg-rose-950/30 border border-rose-500/30 flex items-center justify-between">
+                <div>
+                    <span class="text-slate-400 block text-[10px] font-mono uppercase tracking-wider">National Helpline Number</span>
+                    <span class="text-2xl font-black text-rose-400 font-mono tracking-tight">1930</span>
+                    <p class="text-[11px] text-slate-300 mt-0.5">Toll-free Citizen Financial Cyber Fraud Reporting Line</p>
+                </div>
+                <a href="tel:1930" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 transition-all shadow-[0_0_15px_rgba(244,63,94,0.4)]">
+                    <i data-lucide="phone-outgoing" class="w-3.5 h-3.5"></i>
+                    <span>Call 1930</span>
+                </a>
+            </div>
+
+            <!-- Filing Guide Steps -->
+            <div class="space-y-3">
+                <h4 class="text-xs font-mono uppercase tracking-wider text-slate-300">How to File a Formal Report:</h4>
+                
+                <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                    <span class="text-cyan-400 font-mono text-[11px] font-bold block">1. Immediate Call (Golden Hour)</span>
+                    <p class="text-xs text-slate-300 leading-relaxed">If funds were debited, dial <strong>1930</strong> immediately. Financial intermediaries can freeze transit accounts if alerted early.</p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                    <span class="text-cyan-400 font-mono text-[11px] font-bold block">2. Official Cyber Crime Portal</span>
+                    <p class="text-xs text-slate-300 leading-relaxed">Register detailed fraud complaints on the official Ministry of Home Affairs web portal.</p>
+                    <a href="https://cybercrime.gov.in" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 text-xs font-mono text-cyan-300 hover:text-cyan-200 underline pt-1">
+                        <span>cybercrime.gov.in</span>
+                        <i data-lucide="external-link" class="w-3 h-3"></i>
+                    </a>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                    <span class="text-cyan-400 font-mono text-[11px] font-bold block">3. Preserve Evidence</span>
+                    <p class="text-xs text-slate-300 leading-relaxed">Keep transaction IDs, SMS alerts, UPI reference numbers, and the audit image exported from LinkLocker AI.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="pt-3 border-t border-slate-800 flex items-center gap-3 shrink-0">
+            <a href="https://cybercrime.gov.in" target="_blank" rel="noopener noreferrer" class="flex-1 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs uppercase tracking-wider text-center transition-all">
+                Open Portal
+            </a>
+            <button onclick="closeCyberEmergencyModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs tracking-wider uppercase transition-colors">
+                Close Guide
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Safe Web Snapshot Preview Modal -->
+<div id="safe-snapshot-modal" class="fixed inset-0 z-[160] bg-slate-950/85 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-slate-900 border border-cyan-500/40 rounded-3xl p-6 max-w-3xl w-full mx-4 shadow-2xl relative flex flex-col max-h-[90vh]">
+        
+        <!-- Modal Top Bar -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+            <div class="flex items-center space-x-2 text-cyan-400 font-mono text-xs uppercase tracking-wider">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                <span>Isolated Visual Snapshot</span>
+            </div>
+            <button type="button" onclick="closeSafeSnapshotModal()" class="text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- URL Information Bar -->
+        <div class="my-4 p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between">
+            <span id="snapshot-target-url" class="text-xs font-mono text-cyan-300 truncate max-w-[70%]"></span>
+            <span class="text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded">
+                SCRIPTS BLOCKED
+            </span>
+        </div>
+
+        <!-- Image Display Area -->
+        <div class="relative flex-grow bg-slate-950 rounded-2xl border border-slate-800 flex items-center justify-center min-h-[280px] overflow-hidden">
+            <!-- Spinner while loading -->
+            <div id="snapshot-loader" class="text-center space-y-2">
+                <div class="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p class="text-xs font-mono text-slate-400">Capturing secure screenshot...</p>
+            </div>
+
+            <!-- Error message if site blocks screenshots -->
+            <div id="snapshot-error" class="hidden text-center p-4">
+                <i data-lucide="alert-triangle" class="w-8 h-8 text-amber-400 mx-auto mb-2"></i>
+                <p class="text-xs font-mono text-slate-300">Preview unavailable. Target site blocked remote capture.</p>
+            </div>
+
+            <!-- The actual screenshot -->
+            <img id="snapshot-image" src="" alt="Safe Preview" class="w-full h-full object-contain max-h-[50vh] hidden">
+        </div>
+
+        <!-- Close Button -->
+        <div class="pt-4 mt-2 border-t border-slate-800 flex justify-end">
+            <button type="button" onclick="closeSafeSnapshotModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono font-bold uppercase transition-colors">
+                Close
+            </button>
+        </div>
+
+    </div>
+</div>
+
+    <!-- Custom JavaScript Link -->
+    <script src="script.js"></script>
+</body>
+</html>
